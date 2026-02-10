@@ -2,26 +2,27 @@
 
 pkgname=boost-di
 _pkgname=di
-pkgver=1.1.0
+pkgver=1.3.2
 pkgrel=1
 pkgdesc="Boost (experimental) c++14 dependency injection library"
 arch=('any')
-url="https://github.com/boost-experimental/${_pkgname}"
+url="https://github.com/boost-ext/${_pkgname}"
 license=('Boost')
 makedepends=('cmake')
-source=("${pkgname}.tar.gz::https://github.com/boost-experimental/${_pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('2bb52ed621c36e4e301ed7fbe4197980e9110bd4afc4208841637ce112c0d443')
+source=("${pkgname}.tar.gz::https://github.com/boost-ext/${_pkgname}/archive/v${pkgver}.tar.gz")
+sha256sums=('2bcd01f1d555bdb59a277b932f9021701c5cd26d1d7411f024394db69c5c11cf')
 
 build() {
    cd "${srcdir}/${_pkgname}-${pkgver}"
-   cmake .
+   mkdir build && cd build
+   cmake -DCMAKE_CXX_STANDARD=14 -DBOOST_DI_OPT_BUILD_TESTS=OFF ..
    make
 }
 
 check() {
-   cd "${srcdir}/${_pkgname}-${pkgver}"
+   cd "${srcdir}/${_pkgname}-${pkgver}/build"
    # let user know this test isn't hung, because it will take around a minute even though tons of prior tests were nearly instant
-   sleep 3 && echo && echo "*** test.ft_di_errors will take at least a minute ***" &
+   echo "*** test.ft_di_errors will take at least a minute ***"
    ctest
 }
 
